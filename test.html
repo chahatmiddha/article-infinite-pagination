@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)https://static.vidgyor.com/demo/player/player_demo_n18.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        
+    </div>
+
+    <div id="vidgyor_parent" style="height: 360px;width: 640px;">
+        <div id="vidgyorPlayer" style="height: 360px; width: 640px;" class="vgrPlayerContainer">
+            <div id="closeButtonContainer">
+        </div>
+    </div>
+
+    <script>
+        let ref = (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]);
+        let runtimejs = "https://static.vidgyor.com/demo/player/n18/player.min.js";
+        var script = document.createElement("script");
+        script.src = runtimejs;
+        script.defer = true;
+        script.onload = () => {
+            console.log("script onload");
+            bindPlayer();
+        }
+        script.crossorigin = "anonymous";
+        ref.appendChild(script);
+        var player = {};
+
+        const getVideoEmbedMetadata = async () => {
+            var l = "https://pubstack.nw18.com/pubsync/v1/api";
+            var f = "".concat(l, "/videos/embed?ids=644d14387ec1f4643b18505b&website=5ee0c7d7274b9d7d0ae8f43c&keywords={\"644d14387ec1f4643b18505b\":\"\"}&city_name=All&state_name=punjabi&district_name=All&language=punjabi&video_type=non-local18&article_id=422144&section_name=All&isIos=false")
+            , h = new Headers;
+            h.append("Content-Type", "application/json"),
+            h.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWUyMjZlYWU2MzBkYTg1ODAwZjMxM2IiLCJzY29wZSI6IldFQlNJVEUiLCJzZXNzaW9uX2lkIjoiYmRmNjEzNTgtM2JiZS00NzBkLWE2MDItODUzNTg1YzNlMjE2IiwiaWF0IjoxNTk5OTg3Njk2fQ.64HrEJKyBkaBf_x5HaNJRmGNJRxOtsCnrzv_x3LV-6U");
+            let resp = await fetch(f, {
+                headers: h
+            })
+            return await resp.json()
+        }
+        const bindPlayer = async () => {
+            let video_meta = await getVideoEmbedMetadata();
+            let config = (video_meta?.data?.videos && video_meta?.data?.videos[0]) ? video_meta?.data?.videos[0] : {};
+            var e = this, 
+            playerConfig = {},
+            videoType = "m3u8", finalsrc = "https://media.news18.com/0fc7be21-883e-4a2c-82fc-affe1dd8a0b2/62de56d2c721f213ad23914c.ism/manifest(format=m3u8-aapl)";
+            "video/mp4" === config?.sources[0].type ? (videoType = "mp4",
+            finalsrc = config?.sources[0].src) : (videoType = "m3u8",
+            finalsrc = config?.sources[0].src.split("?")[0]),
+            playerConfig = {
+                accountId: "vprism",
+                profile: "62bd56e4517f060009f59961/abded892e2461_vod",
+                playerDivId: "vidgyorPlayer",
+                isAutoPlay: !1,
+                isMute: "",
+                posterImageUrl: config.thumbnail,
+                tapToUnmute: !1,
+                disableAds: !1,
+                pip: 0,
+                piv: 0,
+                streamUrl: finalsrc,
+                adTag: config.ad_tag,
+                mediaType: videoType,
+                token: "?hdnts=".concat(config.stream_token)
+            };
+            var r = ["autoplay", "preload", "autoSetup", "fluid", "language", "nativeControlsForTouch", "fullscreen", "html5", "playbackRates", "responsive", "sources", "suppressNotSupportedError", "analytics", "events"];
+            Object.keys(config).forEach(function(t) {
+                -1 === r.indexOf(t) && (playerConfig[t] = config[t])
+            })
+            console.log(config, "stream path output", playerConfig);
+            VIDGYOR.initPlayer(playerConfig)
+            player = new VidgyorPlayer();
+
+            player.ready(() => console.log('ready'))
+            player.on("adskip", () => console.log('adskip'))
+            player.on("adclick", () => console.log('adclick'))
+            player.on("adimpression", () => console.log('adimpression'))
+            player.on("adpaused", () => console.log('adpaused'))
+            player.on("adresume", () => console.log('adresume'))
+            player.on("aderror", () => console.log('aderror'))
+            player.on("play", () => console.log('play'))
+            player.on("pause", () => console.log('pause'))
+            player.on("ended", () => console.log('ended'))
+            player.on("timeupdate", () => console.log('timeupdate'))
+            player.on("resume", () => console.log('resume'))
+            player.on("userPause", () => console.log('user pause'))
+            player.on("firstquartile", () => console.log('first quartile'))
+            player.on("midpoint", () => console.log('midpoint'))
+            player.on("thirdquartile", () => console.log('third quartile'))
+            player.on("adcomplete", () => console.log('ad complete'))
+            player.on("adstart", () => console.log('ad start'))
+            player.on("adsready", () => console.log('ads ready'))
+        }
+
+    </script>
+
+    <button onclick="player.play()">play</button>
+    <button onclick="player.pause()">pause</button>
+    <button onclick="player.mute()">mute</button>
+    <button onclick="player.unmute()">unmute</button>
+    <button onclick="player.adPause()">ad pause</button>
+    <button onclick="player.adResume()">ad resume</button>
+    <button onclick="player.adPlay()">ad play</button>
+    <button onclick="console.log(player.adDuration())">ad duration</button>
+
+    <div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti est qui earum provident esse molestias
+            magni rem doloremque dolore cupiditate optio ullam, facilis in nisi maiores at accusamus saepe amet.</p>
+    </div>
+
+
+</body></html>
